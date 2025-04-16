@@ -38,12 +38,13 @@ public class Calculator {
 
     /**
      * Empfängt den Befehl der C- bzw. CE-Taste (Clear bzw. Clear Entry).
-     * Einmaliges Drücken der Taste löscht die zuvor eingegebenen Ziffern auf dem Bildschirm
-     * so dass "0" angezeigt wird, jedoch ohne zuvor zwischengespeicherte Werte zu löschen.
-     * Wird daraufhin noch einmal die Taste gedrückt, dann werden auch zwischengespeicherte
-     * Werte sowie der aktuelle Operationsmodus zurückgesetzt, so dass der Rechner wieder
-     * im Ursprungszustand ist.
+     * Diese Implementierung löscht sowohl den aktuellen Bildschirminhalt
+     * als auch alle zwischengespeicherten Werte und den aktuellen Operationsmodus.
+     * Der Rechner kehrt somit vollständig in den Ursprungszustand zurück.
+     * (Hinweis: Entspricht der "C"-Taste auf dem Online Calculator.
+     * Eine Unterscheidung zwischen C und CE erfolgt nicht.)
      */
+
     public void pressClearKey() {
         screen = "0";
         latestOperation = "";
@@ -52,13 +53,16 @@ public class Calculator {
 
     /**
      * Empfängt den Wert einer gedrückten binären Operationstaste, also eine der vier Operationen
-     * Addition, Substraktion, Division, oder Multiplikation, welche zwei Operanden benötigen.
-     * Beim ersten Drücken der Taste wird der Bildschirminhalt nicht verändert, sondern nur der
+     * Addition, Substraktion, Division oder Multiplikation, welche zwei Operanden benötigen.
+     * Beim ersten Drücken der Taste wird der Bildschirminhalt nicht verändert, sondern der
      * Rechner in den passenden Operationsmodus versetzt.
-     * Beim zweiten Drücken nach Eingabe einer weiteren Zahl wird direkt des aktuelle Zwischenergebnis
-     * auf dem Bildschirm angezeigt. Falls hierbei eine Division durch Null auftritt, wird "Error" angezeigt.
+     * Wird die Taste erneut gedrückt, nachdem eine zweite Zahl eingegeben wurde,
+     * wird die gespeicherte Operation bereits ausgeführt und das Zwischenergebnis gespeichert.
+     * Dadurch sind mehrfache, verkettete Rechenschritte möglich.
+     * Wird ein negativer Wert eingegeben, wird dieser korrekt verarbeitet.
      * @param operation "+" für Addition, "-" für Substraktion, "x" für Multiplikation, "/" für Division
      */
+
     public void pressBinaryOperationKey(String operation) {
 
         if (screen.startsWith("-") && latestOperation.isEmpty()) {
@@ -79,8 +83,12 @@ public class Calculator {
      * Quadratwurzel, Prozent, Inversion, welche nur einen Operanden benötigen.
      * Beim Drücken der Taste wird direkt die Operation auf den aktuellen Zahlenwert angewendet und
      * der Bildschirminhalt mit dem Ergebnis aktualisiert.
+     * Wird ein ungültiger Operator übergeben, zeigt der Bildschirm "Error" an.
+     * Auch mathematisch ungültige Operationen wie 1/0 oder Wurzel aus negativen Zahlen
+     * führen zu einer "Error"-Ausgabe, anstelle eines Absturzes.
      * @param operation "√" für Quadratwurzel, "%" für Prozent, "1/x" für Inversion
      */
+
     public void pressUnaryOperationKey(String operation) {
         if (!latestOperation.isEmpty() && !screen.equals("0")) {
             screen = "Error";
